@@ -1,6 +1,6 @@
 # Patch format, schema 1
 
-The manifest is generated from the existing v1.0 source, never from a generic binary diff.
+The manifest is generated from the existing custom V2.2 source, never from a generic binary diff.
 Input and output are pinned by SHA-256 and file size. Offsets are zero-based byte offsets.
 
 - `payload_base64`: compiled extension code and zero-filled stock-template placeholders.
@@ -24,10 +24,12 @@ it must pin the supported release hashes in its own reviewed code.
 From the repository root, with an output manifest path that does not exist:
 
 ```sh
-python3 tools/generate_patch.py '/path/to/official-V2.2.bin' '/path/to/new-v1.0.json'
-python3 tests/check_patch.py '/path/to/official-V2.2.bin' '/path/to/local-v1.0.bin'
+python3 tools/generate_patch.py '/path/to/official-V2.2.bin' '/path/to/new-V2.2.json'
+python3 tests/check_patch.py '/path/to/official-V2.2.bin' '/path/to/local-kkerors-mod.bin'
 ```
 
-Compare the generated manifest with `docs/patches/v1.0.json` before publishing.
-The generator refuses to call a compiler/source variant v1.0 if its output hash differs.
+Compare the generated manifest with `docs/patches/V2.2.json` before publishing.
+The generator rejects compiler/source output that differs from the pinned reference hash.
 No stock or complete modified firmware is needed in the public repository or public CI.
+
+`base_firmware: "V2.2"` identifies the official firmware base, not a separate mod version. The generated filename is `V2.2_kkerors-mod.bin`. No firmware bytes changed during the naming update.

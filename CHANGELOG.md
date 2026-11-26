@@ -1,6 +1,11 @@
-## v1.0 — 2026-11-18
+## 2026-11-27
 
-- Named v1.0 on 2026-11-19 as the baseline for future builds; firmware bytes unchanged from v1.
+- Use stock V2.2 as the only public firmware version; output filename is V2.2_kkerors-mod.bin.
+- Replace the abstract A/B cards with illustrated stock Mode 2 and custom Mode 3 screens.
+- Simplify the website and project description; firmware bytes are unchanged.
+
+## Custom V2.2 — 2026-11-18
+
 - Changed ASSIGN to SAVE; kept the native Drum uppercase < BACK button and PRESET A/B header.
 - Replaced swatches and COLOR A/B/value captions with the exact Drum footer label and selector records, changing only widget IDs. COLOR occupies the first of the three native footer cells; two remain empty.
 - COLOR uses the standard seven-name selector with bounded left/right taps. BACK cancels both pending preset and color; SAVE commits them together. List gestures retain native handling even when dragged across the footer.

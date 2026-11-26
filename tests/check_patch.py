@@ -15,7 +15,7 @@ gen = importlib.util.module_from_spec(spec); spec.loader.exec_module(gen)
 
 def main():
     stock, baseline = [Path(p).read_bytes() for p in sys.argv[1:]]
-    patch = json.loads((ROOT / 'docs/patches/v1.0.json').read_text())
+    patch = json.loads((ROOT / 'docs/patches/V2.2.json').read_text())
     original = bytes(stock)
     assert gen.generate(stock) == patch, 'Patch generation is not reproducible'
     assert gen.apply(stock, patch) == baseline, 'Not byte-identical to saved baseline'
@@ -41,6 +41,7 @@ def main():
     damaged = bytearray(stock); damaged[-1] ^= 1; reject(damaged, patch)
     reject(baseline, patch)
     mutations = [
+        lambda p: p.update(base_firmware="V1.2"),
         lambda p: p.update(schema=2),
         lambda p: p.update(insertion=len(stock) + 1),
         lambda p: p['copies'][0].update(source=len(stock)),

@@ -1,15 +1,15 @@
 /* MIT; see ../LICENSE and ../THIRD_PARTY_NOTICES.md. */
-export const RELEASE = Object.freeze({version:'v1.0', inputSize:7598420, outputSize:7604952,
+export const FIRMWARE = Object.freeze({baseFirmware:'V2.2', inputSize:7598420, outputSize:7604952,
   inputHash:'2928e3ca297cce1759944418cb91ce73a936a6b35032219086b652c3708c6f7c',
   outputHash:'de0fd0b6e61b626939da3ddacd42922cf1e5fdc70131d97fb5e101b09b62e488',
-  filename:'V2.2_kkerors-mod-v1.0.bin'});
+  filename:'V2.2_kkerors-mod.bin'});
 export async function sha256(bytes) {
   return Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',bytes)),x=>x.toString(16).padStart(2,'0')).join('');
 }
 export async function validateInput(input) {
-  if (!(input instanceof Uint8Array) || input.length !== RELEASE.inputSize)
+  if (!(input instanceof Uint8Array) || input.length !== FIRMWARE.inputSize)
     throw new Error('An original Hotone Ampero Mini V2.2 .bin is required. The file size does not match.');
-  if (await sha256(input) !== RELEASE.inputHash)
+  if (await sha256(input) !== FIRMWARE.inputHash)
     throw new Error('The file does not match stock V2.2. Modified or corrupted firmware is not supported.');
 }
 function span(at,n,size) {
@@ -25,14 +25,14 @@ function claim(regions,at,n) {
 }
 export async function applyPatch(input,p) {
   await validateInput(input);
-  if(p.format!=='kkerors-mod-patch'||p.schema!==1||p.release!==RELEASE.version||
-     p.input?.size!==RELEASE.inputSize||p.input?.sha256!==RELEASE.inputHash||
-     p.output?.size!==RELEASE.outputSize||p.output?.sha256!==RELEASE.outputHash||p.output?.filename!==RELEASE.filename)
-    throw new Error('The patch does not match the supported release.');
+  if(p.format!=='kkerors-mod-patch'||p.schema!==1||p.base_firmware!==FIRMWARE.baseFirmware||
+     p.input?.size!==FIRMWARE.inputSize||p.input?.sha256!==FIRMWARE.inputHash||
+     p.output?.size!==FIRMWARE.outputSize||p.output?.sha256!==FIRMWARE.outputHash||p.output?.filename!==FIRMWARE.filename)
+    throw new Error('The patch does not match the supported build.');
   if(typeof p.payload_base64!=='string'||p.payload_base64.length>20000||!Array.isArray(p.copies)||p.copies.length!==6||
      !Array.isArray(p.writes)||p.writes.length!==14) throw new Error('Invalid patch structure.');
   const payload=Uint8Array.from(atob(p.payload_base64),c=>c.charCodeAt(0));
-  if(payload.length!==RELEASE.outputSize-RELEASE.inputSize) throw new Error('Invalid extension length.');
+  if(payload.length!==FIRMWARE.outputSize-FIRMWARE.inputSize) throw new Error('Invalid extension length.');
   const regions=[];
   for(const op of p.copies) {
     span(op.source,op.length,input.length);span(op.target,op.length,payload.length);claim(regions,op.target,op.length);
@@ -42,7 +42,7 @@ export async function applyPatch(input,p) {
     for(const edit of op.edits) {const bytes=hex(edit.hex);span(edit.offset,bytes.length,op.length);payload.set(bytes,op.target+edit.offset);}
   }
   span(p.insertion,0,input.length);
-  const out=new Uint8Array(RELEASE.outputSize);
+  const out=new Uint8Array(FIRMWARE.outputSize);
   out.set(input.subarray(0,p.insertion));out.set(payload,p.insertion);out.set(input.subarray(p.insertion),p.insertion+payload.length);
   const writes=[];
   for(const op of p.writes) {
@@ -57,6 +57,6 @@ export async function applyPatch(input,p) {
   for(const at of p.header_add_u32) {const value=source.getUint32(at,true)+payload.length;if(value>0xffffffff)throw new Error('Header value overflow.');target.setUint32(at,value,true);}
   target.setUint32(4,out.length-48,true);
   let sum=0;for(let i=48;i<out.length;i++)sum=(sum+out[i])&255;out[14]=sum;
-  if(await sha256(out)!==RELEASE.outputHash)throw new Error('The output checksum does not match. Download cancelled.');
+  if(await sha256(out)!==FIRMWARE.outputHash)throw new Error('The output checksum does not match. Download cancelled.');
   return out;
 }

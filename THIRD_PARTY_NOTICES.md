@@ -14,5 +14,5 @@ included as standalone assets in this source-only staging tree.
 Existing integration code includes addresses and expected instruction values for
 compatibility checks. Its provenance and any copied implementation fragments must
 be reviewed before public release; this document is not a legal clearance.
-The planned patcher must read stock templates from a user-supplied original file.
+The browser patcher reads stock templates from a user-supplied original file.
 The MIT license for this project's code does not license Hotone firmware or trademarks.

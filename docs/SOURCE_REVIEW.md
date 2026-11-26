@@ -1,6 +1,6 @@
 # Technical source/distribution review — 2026-11-27
 
-Scope: current source/menu files and generated v1.0 patch. This is a technical inventory,
+Scope: current source/menu files and generated custom V2.2 patch. This is a technical inventory,
 not a legal opinion or proof of permission from a manufacturer.
 
 ## Findings
@@ -27,11 +27,11 @@ not a legal opinion or proof of permission from a manufacturer.
 
 ## Verification
 
-The generated recipe reproduces the saved v1.0 binary byte-for-byte:
+The generated recipe reproduces the saved custom V2.2 binary byte-for-byte:
 `de0fd0b6e61b626939da3ddacd42922cf1e5fdc70131d97fb5e101b09b62e488`.
 Regeneration is deterministic with the tested compiler. The integration test checks
 six empty template regions, absence of those complete stock regions in the raw payload,
-input preservation, and 17 invalid input/operation rejection cases.
+input preservation, and 18 invalid input/operation rejection cases.
 These checks do not prove that no short byte pattern matches firmware; machine code
 naturally shares instruction encodings. They also do not establish copyright clearance.
 
@@ -41,3 +41,5 @@ Review retained instruction fragments, numeric tables/font metrics and authorshi
 coverage in context. A browser patcher reduces bundled proprietary content but does not
 itself grant permission to modify firmware or override applicable license terms.
 No blanket claim of being free from third-party rights is made.
+
+The site now labels only the stock firmware base, V2.2. Display illustrations are original SVG drawings based on the native layout, not vendor image assets.

@@ -30,7 +30,7 @@ Record those settings separately before changing firmware.
 
 Install compatible firmware, connect in normal mode and import your saved preset file through Ampero Editor.
 Importing a whole bank may overwrite existing user presets. Restore IR and Sound Clone files to their original slots
-and reapply global settings as needed. Recovery from kkerors mod v1.0 has not been confirmed on hardware.
+and reapply global settings as needed. Recovery from the custom firmware has not been confirmed on hardware.
 Follow the official Hotone recovery/update procedure for your device.
 
 ## References

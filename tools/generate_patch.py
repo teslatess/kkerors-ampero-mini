@@ -25,7 +25,7 @@ def generate(stock):
     # The existing builder validates the exact stock SHA and inverse reconstruction.
     final, report = builder.build(stock)
     if digest(final) != BASELINE:
-        raise ValueError('Source/compiler output differs from v1.0; do not relabel it as v1.0')
+        raise ValueError('Source/compiler output differs from the pinned custom V2.2 build')
     raw, symbols = builder.compile_source()
     payload = bytearray(raw)
     copies = []
@@ -54,9 +54,9 @@ def generate(stock):
         old = bytes.fromhex(hook['before'])
         writes.append(dict(offset=80 + w[4] - 0x80000 + int(hook['address'], 16),
                            length=len(old), expected_sha256=digest(old), hex=hook['after']))
-    patch = dict(format='kkerors-mod-patch', schema=1, release='v1.0',
+    patch = dict(format='kkerors-mod-patch', schema=1, base_firmware='V2.2',
                  input=dict(size=len(stock), sha256=builder.SHA),
-                 output=dict(size=len(final), sha256=BASELINE, filename='V2.2_kkerors-mod-v1.0.bin'),
+                 output=dict(size=len(final), sha256=BASELINE, filename='V2.2_kkerors-mod.bin'),
                  insertion=insertion, payload_base64=base64.b64encode(payload).decode(),
                  copies=copies, writes=writes,
                  header_add_u32=[52, 56, 64, 72, 84, 88])
@@ -71,7 +71,7 @@ def apply(stock, patch):
         if type(offset) is not int or type(length) is not int or offset < 0 or length < 0 or offset + length > size:
             raise ValueError('Operation out of bounds')
 
-    if patch['format'] != 'kkerors-mod-patch' or patch['schema'] != 1:
+    if patch['format'] != 'kkerors-mod-patch' or patch['schema'] != 1 or patch.get('base_firmware') != 'V2.2':
         raise ValueError('Unsupported patch format')
     if len(stock) != patch['input']['size'] or digest(stock) != patch['input']['sha256']:
         raise ValueError('Wrong input firmware')
@@ -120,4 +120,4 @@ if __name__ == '__main__':
     patch = generate(stock)
     with Path(sys.argv[2]).open('x') as f:
         json.dump(patch, f, indent=2); f.write('\n')
-    print('Verified v1.0 patch:', patch['output']['sha256'])
+    print('Verified custom V2.2 patch:', patch['output']['sha256'])
