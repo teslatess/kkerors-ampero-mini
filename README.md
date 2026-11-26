@@ -16,8 +16,6 @@ Custom firmware based on **Hotone Ampero Mini V2.2**. Adds a dedicated A/B displ
 
 A/B selects two separate presets; gapless switching is not added. Gold and Orange have different screen colors but use the same physical LED ring mask.
 
-![Ampero Mini color examples](assets/color-showcase.png)
-
 ## Build and install
 
 1. Back up presets and keep original IR, Sound Clone files and the official firmware. Read the [backup guide](docs/BACKUP_GUIDE.md).
