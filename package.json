@@ -1,0 +1,1 @@
+{"name":"kkerors-mod","private":true,"type":"module","scripts":{"test":"node tests/check_browser_patch.mjs"}}
