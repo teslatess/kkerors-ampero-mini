@@ -1,5 +1,9 @@
 # kkerors mod
 
+![kkerors mod v1.0: green, blue, red and purple color examples on Ampero Mini](assets/color-showcase.png)
+
+[Build your firmware in the browser](https://teslatess.github.io/kkerors-ampero-mini/)
+
 Independent experimental modification for Hotone Ampero Mini, based on stock V2.2.
 Baseline: v1.0 — Mode 3 with assignable A/B presets and BUTTON COLOR.
 
